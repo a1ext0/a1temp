@@ -1,8 +1,8 @@
 # Шаблонная система a1ext0
 
-Вставляет текст (не HTML!!!) вместо {`ключ обьекта`} или атрибут вместо a1="`имя атрибута` `ключ обьекта` (через пробел)". Для того чтобы воспользоваться, надо вызвать функцию a1temp с аргументом-обьектом.
+Вставляет текст (не HTML!!!) вместо {`ключ обьекта`}, html в блок, где находится {=`ключ обьекта`}(заменит всё в блоке), или атрибут вместо a1="`имя атрибута` `ключ обьекта` (через пробел)". Для того чтобы воспользоваться, надо вызвать функцию a1temp с аргументом-обьектом.
 
-Например: 
+Например:
 ```javascript
 a1temp({
   temp: '#temp1',
@@ -13,7 +13,7 @@ template: строка с селектором нужного template, прим
 ```html
 <template id="temp">
 <h1>{name}</h1>
-<p a1="class classname">password here</p>
+<p a1="class classname">{=password}</p>
 </template>
 }
 ```
@@ -22,7 +22,8 @@ obj: обьект, или массив обьектов
 ```javascript
 let obj = {
   name: 'Alex',
-  classname: 'secret'
+  classname: 'secret',
+  password: '<b>I will not say</b>'
 }
 ```
 
@@ -37,12 +38,12 @@ body.append(div);
 Его наполнение будет выглядеть так:
 ```html
 <h1>Alex</h1>
-<p class="secret">password here</p>
+<p class="secret"><b>I will not say</b></p>
 }
 ```
 
 Если передать массив
 ```javascript
-let obj = [{name: 'Alex', phone: 'secret'}, {name: 'Victor', phone: 'notsecret'}]
+let obj = [{...}, {...}]
 ```
 То вернутся несколько элементов, которые можно вставить также, как и обычный элемент

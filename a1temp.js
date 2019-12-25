@@ -4,18 +4,17 @@ export function a1temp(opt) {
   //temp - шаблон, obj - объект для шаблона
   let temp = new DocumentFragment();
   temp.append(document.querySelector(opt.temp).content.cloneNode(true));
-  let s = {};
+  let s = {text: {},html: {}};
   let y = {};
   findText.call(s, temp);
   for (let i = 0; i < temp.children.length; i++) {
     findTag.call(y, temp.children[i]);
   }
-  let ii = 0;
   if (Array.isArray(opt.obj)) {
     let fragment = new DocumentFragment();
     let temp2 = new DocumentFragment();
     temp2.append(temp.cloneNode(true));
-    let s2 = {};
+    let s2 = {text: {},html: {}};
     let y2 = {};
     findText.call(s2, temp2);
     for (let i = 0; i < temp2.children.length; i++) {
@@ -24,14 +23,34 @@ export function a1temp(opt) {
     let mass = [];
     for (let i of opt.obj) {
       for (let key in i) {
-        if (s[key]) {
-          for (let node of s[key]) {
+        if (s.text[key]) {
+          for (let node of s.text[key]) {
             let regexp = new RegExp(`{${key}?}`, 'g');
-            let node2 = s2[key][s[key].indexOf(node)];
+            let node2 = s2.text[key][s.text[key].indexOf(node)];
             let val = node.nodeValue.replace(regexp, i[key]);
             node2.nodeValue = val;
-            ii++;
-            //drawText(node, key, i[key]);
+          }
+        }
+        if (s.html[key]) {
+          for (let node of s.html[key]) {
+            let regexp = new RegExp(`{=${key}?}`, 'g');
+            let node2 = s2.html[key][s.html[key].indexOf(node)];
+            let val = node.nodeValue.replace(regexp, i[key]);
+            let div = document.createElement('div');
+            let div2 = new DocumentFragment();
+            div.innerHTML = val;
+            for (let k = 0; k < div.childNodes.length; i++) {
+              div2.append(div.childNodes[k]);
+            }
+            console.log(div2);
+            node2.nodeValue = '';
+            while (node2.nextSibling) {
+              node2.nextSibling.remove();
+            }
+            while (node2.previousSibling) {
+              node2.previousSibling.remove();
+            }
+            node2.parentElement.append(div2);
           }
         }
         if (y[key]) {
@@ -78,13 +97,22 @@ function findText(element) {
       findText.call(this, element.childNodes[i]);
     }
   }
-  let regexp = new RegExp(`{.+?}`);
+  let regexp = new RegExp(`{.+}`);
+  let regexp2 = new RegExp(`{=.+}`);
   if (element.nodeType == Node.TEXT_NODE && regexp.test(element.nodeValue)) {
-    let name = element.nodeValue.match(/\{.+?\}/g)[0].replace(/\{?\}?/g, '');
-    if (!this[name]) {
-      this[name] = [];
+    if (element.nodeValue.match(regexp2)) {
+      let name = element.nodeValue.match(/\{=.+\}/g)[0].replace(/\{?=?\}?/g, '');
+      if (!this.html[name]) {
+        this.html[name] = [];
+      }
+      this.html[name].push(element);
+    } else {
+      let name = element.nodeValue.match(/\{.+\}/g)[0].replace(/\{?\}?/g, '');
+      if (!this.text[name]) {
+        this.text[name] = [];
+      }
+      this.text[name].push(element);
     }
-    this[name].push(element);
   }
 }
 function findTag(element) {
