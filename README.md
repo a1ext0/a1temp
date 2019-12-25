@@ -1,6 +1,6 @@
 # Шаблонная система a1ext0
 
-Вставляет текст или узел вместо {...}. Для того чтобы воспользоваться, надо вызвать функцию a1temp с аргументом-обьектом.
+Вставляет текст (не HTML!!!) вместо {...}. Для того чтобы воспользоваться, надо вызвать функцию a1temp с аргументом-обьектом.
 
 Например: 
 ```javascript
@@ -13,7 +13,7 @@ template: строка с селектором нужного template, прим
 ```html
 <template id="temp">
 <h1>{name}</h1>
-<p>{phone}</p>
+<p a1="class classname">password here</p>
 </template>
 }
 ```
@@ -22,7 +22,7 @@ obj: обьект, или массив обьектов
 ```javascript
 let obj = {
   name: 'Alex',
-  phone: 'secret'
+  classname: 'secret'
 }
 ```
 
@@ -34,8 +34,15 @@ let div = a1temp({
 })
 body.append(div);
 ```
+Его наполнение будет выглядеть так:
+```html
+<h1>Alex</h1>
+<p class="secret">password here</p>
+}
+```
+
 Если передать массив
 ```javascript
-let obj = [{name: 'Alex', phone: 'secret'}, {name: 'Victor', phone: 'not secret'}]
+let obj = [{name: 'Alex', phone: 'secret'}, {name: 'Victor', phone: 'notsecret'}]
 ```
-То вернётся documentFragment с несколькими элементами, который можно вставить также, как и обычный элемент
+То вернутся несколько элементов, которые можно вставить также, как и обычный элемент
