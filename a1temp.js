@@ -10,7 +10,6 @@ export function a1temp(opt) {
   for (let i = 0; i < temp.children.length; i++) {
     findTag.call(y, temp.children[i]);
   }
-  console.log(y);
   let ii = 0;
   if (Array.isArray(opt.obj)) {
     let fragment = new DocumentFragment();
@@ -91,10 +90,9 @@ function findText(element) {
 function findTag(element) {
   if (element.children.length > 0) {
     for (let i = 0; i < element.children.length; i++) {
-      findText.call(this, element.children[i]);
+      findTag.call(this, element.children[i]);
     }
   }
-  let regexp = new RegExp(`{.+?}`);
   if (element.hasAttribute('a1')) {
     let name = element.getAttribute('a1').split(' ');
     if (!this[name[1]]) {
